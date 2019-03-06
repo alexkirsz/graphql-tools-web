@@ -1465,6 +1465,24 @@ describe('printDocument()', () => {
         }
       `);
     });
+
+    it('does not append a type prefix when the option is falsy', () => {
+      const schema = buildSchema(`
+        type Query {
+          name: String!
+        }
+      `);
+
+      expect(
+        print('query Details { name }', schema, {
+          printOptions: {addTypePrefix: false},
+        }),
+      ).toContain(stripIndent`
+        export interface DetailsData {
+          name: string;
+        }
+      `);
+    });
   });
 
   describe('mutation', () => {
@@ -1513,6 +1531,28 @@ describe('printDocument()', () => {
         }
       `);
     });
+
+    it('does not append a type prefix when the option is falsy', () => {
+      const schema = buildSchema(`
+        type RenamePayload {
+          name: String!
+        }
+
+        type Mutation {
+          rename(name: String!): RenamePayload!
+        }
+      `);
+
+      expect(
+        print('mutation Rename { rename(name: "Foo") { name } }', schema, {
+          printOptions: {addTypePrefix: false},
+        }),
+      ).toContain(stripIndent`
+        export interface RenameData {
+          rename: RenameData.Rename;
+        }
+      `);
+    });
   });
 
   describe('subscription', () => {
@@ -1544,6 +1584,24 @@ describe('printDocument()', () => {
         }),
       ).toContain(stripIndent`
         export interface DetailsSubscriptionData {
+          name: string;
+        }
+      `);
+    });
+
+    it('does not append a type prefix when the option is falsy', () => {
+      const schema = buildSchema(`
+        type Subscription {
+          name: String!
+        }
+      `);
+
+      expect(
+        print('subscription Details { name }', schema, {
+          printOptions: {addTypePrefix: false},
+        }),
+      ).toContain(stripIndent`
+        export interface DetailsData {
           name: string;
         }
       `);
@@ -1740,6 +1798,35 @@ describe('printDocument()', () => {
       );
 
       expect(printed.match(importMatcher)).toHaveLength(1);
+    });
+
+    it('does not append a type prefix when the option is falsy', () => {
+      const schema = buildSchema(`
+        type Person {
+          name: String!
+          age: Int!
+        }
+
+        type Query {
+          self: Person!
+        }
+      `);
+
+      expect(
+        print(
+          `
+          fragment Details on Person {
+            name
+          }
+          `,
+          schema,
+          {printOptions: {addTypePrefix: false}},
+        ),
+      ).toContain(stripIndent`
+        export interface DetailsData {
+          name: string;
+        }
+      `);
     });
   });
 
@@ -1973,6 +2060,7 @@ function print(
 ) {
   const finalOptions = {
     addTypename: false,
+    addTypePrefix: true,
     schemaTypesPath: path.resolve('Schema.ts'),
     ...printOptions,
   };
