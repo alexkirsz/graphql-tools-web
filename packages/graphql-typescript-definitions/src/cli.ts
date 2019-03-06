@@ -33,6 +33,12 @@ const argv = yargs
     type: 'boolean',
     describe: 'Add a __typename field to every object type',
   })
+  .option('add-type-prefix', {
+    required: false,
+    default: true,
+    type: 'boolean',
+    describe: 'Add a type prefix to every object type',
+  })
   .option('enum-format', {
     required: false,
     type: 'string',
@@ -58,6 +64,7 @@ const builder = new Builder({
   cwd: argv.cwd,
   schemaTypesPath: argv.schemaTypesPath,
   addTypename: argv.addTypename,
+  addTypePrefix: argv.addTypePrefix,
   enumFormat: argv.enumFormat,
   customScalars: normalizeCustomScalars(argv.customScalars),
 });

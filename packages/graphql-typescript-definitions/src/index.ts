@@ -40,6 +40,7 @@ export {EnumFormat};
 
 export interface Options extends PrintDocumentOptions, PrintSchemaOptions {
   addTypename: boolean;
+  addTypePrefix: boolean;
   schemaTypesPath: string;
 }
 
@@ -359,6 +360,7 @@ export class Builder extends EventEmitter {
       return printDocument(file, ast, {
         enumFormat: this.options.enumFormat,
         addTypename: this.options.addTypename,
+        addTypePrefix: this.options.addTypePrefix,
         schemaTypesPath: getSchemaTypesPath(projectConfig, this.options),
       });
     } catch ({message}) {

@@ -9,6 +9,7 @@ export interface Options {
   schemaTypesPath: string;
   enumFormat?: EnumFormat;
   addTypename?: boolean;
+  addTypePrefix?: boolean;
 }
 
 export interface OperationOptions extends Options {
@@ -50,15 +51,19 @@ export class OperationContext {
 
     if (isOperation(this.operation)) {
       const {operationName, operationType} = this.operation;
-      typeName = `${ucFirst(operationName)}${ucFirst(operationType)}Data`;
+      typeName = ucFirst(operationName);
+      if (this.options.addTypePrefix) {
+        typeName += ucFirst(operationType);
+      }
     } else {
       const {fragmentName} = this.operation;
-      typeName = `${ucFirst(fragmentName)}FragmentData`;
+      typeName = ucFirst(fragmentName);
+      if (this.options.addTypePrefix) {
+        typeName += 'Fragment';
+      }
     }
 
-    return this.options.partial
-      ? typeName.replace(/Data$/, 'PartialData')
-      : typeName;
+    return this.options.partial ? `${typeName}PartialData` : `${typeName}Data`;
   }
 
   get namespace() {

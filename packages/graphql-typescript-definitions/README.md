@@ -206,6 +206,7 @@ As noted above, the configuration of your schema and GraphQL documents is done v
 * `--watch`: watches the include globbing patterns for changes and re-processes files (default = `false`)
 * `--cwd`: run tool for `.graphqlconfig` located in this directory (default = `process.cwd()`)
 * `--add-typename`: adds a `__typename` field to every object type (default = `true`)
+* `--add-type-prefix`: adds a `Query | Mutation | Fragment` prefix to every object type (default = `true`)
 * `--enum-format`: specifies output format for enum types (default = `undefined`)
   * Options: `camel-case`, `pascal-case`, `snake-case`, `screaming-snake-case`
   * `undefined` results in using the unchanged name from the schema (verbatim)
